@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
 our $DATE = '2014-07-22'; # DATE
-our $VERSION = '0.01'; # VERSION
+our $VERSION = '0.02'; # VERSION
 
 use 5.010001;
 use strict;
@@ -65,7 +65,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab comple
 
 =head1 VERSION
 
-This document describes version 0.01 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-22.
+This document describes version 0.02 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-22.
 
 =head1 SYNOPSIS
 
@@ -130,16 +130,19 @@ Now you can do:
 
 =head1 DESCRIPTION
 
-This module provides a quick and easy way
+This module provides a quick and easy way to add tab completion feature to your
+scripts, including scripts already written using the venerable L<Getopt::Long>
+module.
 
-L<Getopt::Long::Complete> is basically just L<Getopt::Long>. Its C<GetOptions>
+This module is basically just a thin wrapper for Getopt::Long. Its C<GetOptions>
 function just checks for COMP_LINE/COMP_POINT environment variable before
 passing its arguments to Getopt::Long's GetOptions. If COMP_LINE is defined,
 completion reply will be printed to STDOUT and then the program will exit.
 Otherwise, Getopt::Long's GetOptions is called.
 
-To keep completion quick, you should do GetOptions as early as possible in your
-script. Preferably before loading lots of other Perl modules.
+To keep completion quick, you should do C<GetOptions()> or
+C<GetOptionsWithCompletion()> as early as possible in your script. Preferably
+before loading lots of other Perl modules.
 
 =head1 FUNCTIONS
 
