@@ -1,0 +1,122 @@
+NAME
+    Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with
+    tab completion
+
+VERSION
+    This document describes version 0.01 of Getopt::Long::Complete (from
+    Perl distribution Getopt-Long-Complete), released on 2014-07-22.
+
+SYNOPSIS
+  First example (simple)
+    You just replace "use Getopt::Long" with "use Getopt::Long::Complete"
+    and your program suddenly supports tab completion. This works for
+    most/many programs. For example, below is source code for "delete-user".
+
+     use Getopt::Long::Complete;
+     my %opts;
+     GetOptions(
+         'help|h'     => sub { ... },
+         'on-fail=s'  => \$opts{on_fail},
+         'user=s'     => \$opts{name},
+         'force'      => \$opts{force},
+         'verbose!'   => \$opts{verbose},
+     );
+
+    To activate completion, put your script somewhere in "PATH" and execute
+    this in the shell or put it into your bash startup file (e.g.
+    "/etc/bash_profile" or "~/.bashrc"):
+
+     complete -C delete-user delete-user
+
+    Now, tab completion works:
+
+     % delete-user <tab>
+     --force --help --noverbose --no-verbose --on-fail --user --verbose -h
+     % delete-user --h<tab>
+
+  Second example (added completion)
+    The previous example only provides completion for option names. To
+    provide completion for option values as well as arguments, you need to
+    provide need more hints. Instead of "GetOptions", use
+    "GetOptionsWithCompletion". It's basically the same as "GetOptions" but
+    accept an extra hash first argument. The hash contains option spec as
+    its keys, or an empty string (to provide hints for arguments), and
+    arrays or coderefs as its values. Example:
+
+     use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+     use Complete::Unix;
+     my %opts;
+     GetOptionsWithCompletion(
+         {
+             'on-fail=s' => [qw/die warn ignore/],
+             'user=s'    => \&Complete::Unix::complete_user,
+         },
+         'help|h'     => sub { ... },
+         'on-fail=s'  => \$opts{on_fail},
+         'user=s'     => \$opts{name},
+         'force'      => \$opts{force},
+         'verbose!'   => \$opts{verbose},
+     );
+
+    Now you can do:
+
+     % delete-user --on-fail <tab>
+     die ignore warn
+     % delete-user --on-fail die --user a<tab>
+     alice autrijus
+
+DESCRIPTION
+    This module provides a quick and easy way
+
+    Getopt::Long::Complete is basically just Getopt::Long. Its "GetOptions"
+    function just checks for COMP_LINE/COMP_POINT environment variable
+    before passing its arguments to Getopt::Long's GetOptions. If COMP_LINE
+    is defined, completion reply will be printed to STDOUT and then the
+    program will exit. Otherwise, Getopt::Long's GetOptions is called.
+
+    To keep completion quick, you should do GetOptions as early as possible
+    in your script. Preferably before loading lots of other Perl modules.
+
+FUNCTIONS
+  GetOptions([\%hash, ]@spec)
+    Will call Getopt::Long's GetOptions, except when COMP_LINE environment
+    variable is defined.
+
+  GetOptionsWithCompletion(\%comps, [\%hash, ]@spec)
+    Just like "GetOptions", except that it accepts an extra first argument
+    "\%comps" containing completion hints for completing option *values* and
+    arguments. See Synopsis for example.
+
+SEE ALSO
+    Complete::Getopt::Long, "Complete::Bash".
+
+    Other option-processing modules featuring shell tab completion:
+    Getopt::Complete.
+
+    Perinci::CmdLine - an alternative way to easily create command-line
+    applications with completion feature.
+
+HOMEPAGE
+    Please visit the project's homepage at
+    <https://metacpan.org/release/Getopt-Long-Complete>.
+
+SOURCE
+    Source repository is at
+    <https://github.com/sharyanto/perl-Getopt-Long-Complete>.
+
+BUGS
+    Please report any bugs or feature requests on the bugtracker website
+    <https://rt.cpan.org/Public/Dist/Display.html?Name=Getopt-Long-Complete>
+
+    When submitting a bug or request, please include a test-file or a patch
+    to an existing test-file that illustrates the bug or desired feature.
+
+AUTHOR
+    Steven Haryanto <stevenharyanto@gmail.com>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2014 by Steven Haryanto.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
