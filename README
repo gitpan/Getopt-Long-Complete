@@ -3,7 +3,7 @@ NAME
     tab completion
 
 VERSION
-    This document describes version 0.02 of Getopt::Long::Complete (from
+    This document describes version 0.03 of Getopt::Long::Complete (from
     Perl distribution Getopt-Long-Complete), released on 2014-07-22.
 
 SYNOPSIS
@@ -37,9 +37,9 @@ SYNOPSIS
   Second example (added completion)
     The previous example only provides completion for option names. To
     provide completion for option values as well as arguments, you need to
-    provide need more hints. Instead of "GetOptions", use
+    provide more hints. Instead of "GetOptions", use
     "GetOptionsWithCompletion". It's basically the same as "GetOptions" but
-    accept an extra hash first argument. The hash contains option spec as
+    accepts an extra hash first argument. The hash contains option spec as
     its keys, or an empty string (to provide hints for arguments), and
     arrays or coderefs as its values. Example:
 
@@ -63,6 +63,28 @@ SYNOPSIS
      % delete-user --on-fail <tab>
      die ignore warn
      % delete-user --on-fail die --user a<tab>
+     alice autrijus
+
+    Another example for completing arguments (here we accept multiple
+    usernames as arguments instead of the "--user" option):
+
+     use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+     use Complete::Unix;
+     my %opts;
+     GetOptionsWithCompletion(
+         {
+             'on-fail=s' => [qw/die warn ignore/],
+             ''          => \&Complete::Unix::complete_user,
+         },
+         'help|h'     => sub { ... },
+         'on-fail=s'  => \$opts{on_fail},
+         'force'      => \$opts{force},
+         'verbose!'   => \$opts{verbose},
+     );
+
+    Now you can do:
+
+     % delete-user a<tab>
      alice autrijus
 
 DESCRIPTION

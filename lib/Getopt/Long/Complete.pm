@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
 our $DATE = '2014-07-22'; # DATE
-our $VERSION = '0.02'; # VERSION
+our $VERSION = '0.03'; # VERSION
 
 use 5.010001;
 use strict;
@@ -65,7 +65,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab comple
 
 =head1 VERSION
 
-This document describes version 0.02 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-22.
+This document describes version 0.03 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-22.
 
 =head1 SYNOPSIS
 
@@ -100,9 +100,9 @@ Now, tab completion works:
 =head2 Second example (added completion)
 
 The previous example only provides completion for option names. To provide
-completion for option values as well as arguments, you need to provide need more
+completion for option values as well as arguments, you need to provide more
 hints. Instead of C<GetOptions>, use C<GetOptionsWithCompletion>. It's basically
-the same as C<GetOptions> but accept an extra hash first argument. The hash
+the same as C<GetOptions> but accepts an extra hash first argument. The hash
 contains option spec as its keys, or an empty string (to provide hints for
 arguments), and arrays or coderefs as its values. Example:
 
@@ -126,6 +126,28 @@ Now you can do:
  % delete-user --on-fail <tab>
  die ignore warn
  % delete-user --on-fail die --user a<tab>
+ alice autrijus
+
+Another example for completing arguments (here we accept multiple usernames as
+arguments instead of the C<--user> option):
+
+ use Getopt::Long::Complete qw(GetOptionsWithCompletion);
+ use Complete::Unix;
+ my %opts;
+ GetOptionsWithCompletion(
+     {
+         'on-fail=s' => [qw/die warn ignore/],
+         ''          => \&Complete::Unix::complete_user,
+     },
+     'help|h'     => sub { ... },
+     'on-fail=s'  => \$opts{on_fail},
+     'force'      => \$opts{force},
+     'verbose!'   => \$opts{verbose},
+ );
+
+Now you can do:
+
+ % delete-user a<tab>
  alice autrijus
 
 =head1 DESCRIPTION
