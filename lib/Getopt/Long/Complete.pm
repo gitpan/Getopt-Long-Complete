@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-07-22'; # DATE
-our $VERSION = '0.03'; # VERSION
+our $DATE = '2014-07-25'; # DATE
+our $VERSION = '0.04'; # VERSION
 
 use 5.010001;
 use strict;
@@ -31,6 +31,7 @@ sub GetOptionsWithCompletion {
 
         my ($words, $cword) = @{ Complete::Bash::parse_cmdline(
             undef, undef, '=') };
+        shift @$words; $cword--; # strip command name
         my $compres = Complete::Getopt::Long::complete_cli_arg(
             words => $words, cword => $cword, getopt_spec=>{ @_ },
             completion => $comps);
@@ -65,7 +66,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab comple
 
 =head1 VERSION
 
-This document describes version 0.03 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-22.
+This document describes version 0.04 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-25.
 
 =head1 SYNOPSIS
 
@@ -97,7 +98,7 @@ Now, tab completion works:
  --force --help --noverbose --no-verbose --on-fail --user --verbose -h
  % delete-user --h<tab>
 
-=head2 Second example (added completion)
+=head2 Second example (additional completion)
 
 The previous example only provides completion for option names. To provide
 completion for option values as well as arguments, you need to provide more
