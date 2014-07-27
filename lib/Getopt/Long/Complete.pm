@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-07-26'; # DATE
-our $VERSION = '0.05'; # VERSION
+our $DATE = '2014-07-27'; # DATE
+our $VERSION = '0.06'; # VERSION
 
 use 5.010001;
 use strict;
@@ -18,7 +18,7 @@ our @EXPORT_OK = qw(
                );
 
 sub GetOptionsWithCompletion {
-    my $comps = shift;
+    my $comp = shift;
 
     my $hash;
     if (ref($_[0]) eq 'HASH') {
@@ -34,7 +34,7 @@ sub GetOptionsWithCompletion {
         shift @$words; $cword--; # strip command name
         my $compres = Complete::Getopt::Long::complete_cli_arg(
             words => $words, cword => $cword, getopt_spec=>{ @_ },
-            completion => $comps);
+            completion => $comp);
         print Complete::Bash::format_completion($compres);
         exit 0;
     }
@@ -66,7 +66,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab comple
 
 =head1 VERSION
 
-This document describes version 0.05 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-26.
+This document describes version 0.06 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
 
 =head1 SYNOPSIS
 
@@ -103,17 +103,24 @@ Now, tab completion works:
 The previous example only provides completion for option names. To provide
 completion for option values as well as arguments, you need to provide more
 hints. Instead of C<GetOptions>, use C<GetOptionsWithCompletion>. It's basically
-the same as C<GetOptions> but accepts an extra hash first argument. The hash
-contains option spec as its keys, or an empty string (to provide hints for
-arguments), and arrays or coderefs as its values. Example:
+the same as C<GetOptions> but accepts a coderef in the first argument. The code
+will be invoked when completion to option value or argument is needed. Example:
 
  use Getopt::Long::Complete qw(GetOptionsWithCompletion);
- use Complete::Unix;
+ use Complete::Unix qw(complete_user);
+ use Complete::Util qw(complete_array_elem);
  my %opts;
  GetOptionsWithCompletion(
-     {
-         'on-fail=s' => [qw/die warn ignore/],
-         'user=s'    => \&Complete::Unix::complete_user,
+     sub {
+         my %args  = @_;
+         my $word  = $args{word}; # the word to be completed
+         my $ospec = $args{ospec};
+         if ($ospec && $ospec eq 'on-fail=s') {
+             return complete_array_elem(words=>[qw/die warn ignore/], word=>$word);
+         } elsif ($ospec eq 'user=s') {
+             return complete_user(word=>$word);
+         }
+         [];
      },
      'help|h'     => sub { ... },
      'on-fail=s'  => \$opts{on_fail},
@@ -121,35 +128,6 @@ arguments), and arrays or coderefs as its values. Example:
      'force'      => \$opts{force},
      'verbose!'   => \$opts{verbose},
  );
-
-Now you can do:
-
- % delete-user --on-fail <tab>
- die ignore warn
- % delete-user --on-fail die --user a<tab>
- alice autrijus
-
-Another example for completing arguments (here we accept multiple usernames as
-arguments instead of the C<--user> option):
-
- use Getopt::Long::Complete qw(GetOptionsWithCompletion);
- use Complete::Unix;
- my %opts;
- GetOptionsWithCompletion(
-     {
-         'on-fail=s' => [qw/die warn ignore/],
-         ''          => \&Complete::Unix::complete_user,
-     },
-     'help|h'     => sub { ... },
-     'on-fail=s'  => \$opts{on_fail},
-     'force'      => \$opts{force},
-     'verbose!'   => \$opts{verbose},
- );
-
-Now you can do:
-
- % delete-user a<tab>
- alice autrijus
 
 =head1 DESCRIPTION
 
@@ -174,15 +152,15 @@ before loading lots of other Perl modules.
 Will call Getopt::Long's GetOptions, except when COMP_LINE environment variable
 is defined.
 
-=head2 GetOptionsWithCompletion(\%comps, [\%hash, ]@spec)
+=head2 GetOptionsWithCompletion(\&completion, [\%hash, ]@spec)
 
 Just like C<GetOptions>, except that it accepts an extra first argument
-C<\%comps> containing completion hints for completing option I<values> and
-arguments. See Synopsis for example.
+C<\&completion> containing completion routine for completing option I<values>
+and arguments. See Synopsis for example.
 
 =head1 SEE ALSO
 
-L<Complete::Getopt::Long>, C<Complete::Bash>.
+L<Complete::Getopt::Long> (the backend for this module), C<Complete::Bash>.
 
 Other option-processing modules featuring shell tab completion:
 L<Getopt::Complete>.

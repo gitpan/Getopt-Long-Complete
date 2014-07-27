@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-our $DATE = '2014-07-26'; # DATE
-our $VERSION = '0.05'; # VERSION
+our $DATE = '2014-07-27'; # DATE
+our $VERSION = '0.06'; # VERSION
 
 use 5.010;
 use strict;
@@ -11,14 +11,18 @@ use Getopt::Long::Complete qw(GetOptionsWithCompletion);
 
 my %opts = (cols => 1, bg=>0);
 my $res = GetOptionsWithCompletion(
-    {
-        'int-comp-array=i' => [1..10],
-        'str-comp-sub=s' => sub {
-            my %args = @_;
-            my $word = $args{word} // '';
-            complete_array_elem(array=>[map {"$word$_"} "a".."z"],
-                                word=>$word, ci=>1);
-        },
+    sub {
+        my %args = @_;
+        my $word = $args{word};
+        my $ospec = $args{ospec} // '';
+        if ($ospec eq 'int-comp-array=i') {
+            return complete_array_elem(array=>[1..10], word=>$word);
+        } elsif ($ospec eq 'str-comp-sub=s') {
+            return complete_array_elem(array=>[map {"$word$_"} "a".."z"],
+                                       word=>$word, ci=>1);
+        } else {
+            return undef;
+        }
     },
     'flag1' => sub{},
     'flag2|f' => sub{},
@@ -72,7 +76,7 @@ demo-getopt-long-complete - Script to demonstrate Complete::Getopt::Long
 
 =head1 VERSION
 
-This document describes version 0.05 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-26.
+This document describes version 0.06 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
 
 =head1 SYNOPSIS
 
