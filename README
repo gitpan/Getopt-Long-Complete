@@ -3,7 +3,7 @@ NAME
     tab completion
 
 VERSION
-    This document describes version 0.09 of Getopt::Long::Complete (from
+    This document describes version 0.10 of Getopt::Long::Complete (from
     Perl distribution Getopt-Long-Complete), released on 2014-07-27.
 
 SYNOPSIS
@@ -81,15 +81,15 @@ DESCRIPTION
     "GetOptionsWithCompletion()" as early as possible in your script.
     Preferably before loading lots of other Perl modules.
 
-    Tab completion will behave like Getopt::Long using these configuration:
-    bundling (so -abc works), no_ignore_case, auto_abbrev, permute (so you
-    need to give "--" to end completing option names/values). I believe this
-    is a pretty sane default.
+    Getopt::Long::Configure('no_ignore_case', 'bundling');
 
 FUNCTIONS
   GetOptions([\%hash, ]@spec)
     Will call Getopt::Long's GetOptions, except when COMP_LINE environment
     variable is defined.
+
+    Note: Will temporarily set Getopt::Long configuration as follow:
+    bundling, no_ignore_case. I believe this a sane default.
 
   GetOptionsWithCompletion(\&completion, [\%hash, ]@spec)
     Just like "GetOptions", except that it accepts an extra first argument

@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
 our $DATE = '2014-07-27'; # DATE
-our $VERSION = '0.09'; # VERSION
+our $VERSION = '0.10'; # VERSION
 
 use 5.010001;
 use strict;
@@ -40,11 +40,13 @@ sub GetOptionsWithCompletion {
     }
 
     require Getopt::Long;
+    my $old_conf = Getopt::Long::Configure('no_ignore_case', 'bundling');
     if ($hash) {
         Getopt::Long::GetOptions($hash, @_);
     } else {
         Getopt::Long::GetOptions(@_);
     }
+    Getopt::Long::Configure($old_conf);
 }
 
 sub GetOptions {
@@ -66,7 +68,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab comple
 
 =head1 VERSION
 
-This document describes version 0.09 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
+This document describes version 0.10 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
 
 =head1 SYNOPSIS
 
@@ -145,9 +147,7 @@ To keep completion quick, you should do C<GetOptions()> or
 C<GetOptionsWithCompletion()> as early as possible in your script. Preferably
 before loading lots of other Perl modules.
 
-Tab completion will behave like Getopt::Long using these configuration: bundling
-(so -abc works), no_ignore_case, auto_abbrev, permute (so you need to give C<-->
-to end completing option names/values). I believe this is a pretty sane default.
+Getopt::Long::Configure('no_ignore_case', 'bundling');
 
 =head1 FUNCTIONS
 
@@ -155,6 +155,9 @@ to end completing option names/values). I believe this is a pretty sane default.
 
 Will call Getopt::Long's GetOptions, except when COMP_LINE environment variable
 is defined.
+
+B<Note: Will temporarily set Getopt::Long configuration as follow: bundling,
+no_ignore_case. I believe this a sane default.>
 
 =head2 GetOptionsWithCompletion(\&completion, [\%hash, ]@spec)
 
