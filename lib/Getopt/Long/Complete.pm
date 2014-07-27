@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
 our $DATE = '2014-07-27'; # DATE
-our $VERSION = '0.08'; # VERSION
+our $VERSION = '0.09'; # VERSION
 
 use 5.010001;
 use strict;
@@ -66,7 +66,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab comple
 
 =head1 VERSION
 
-This document describes version 0.08 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
+This document describes version 0.09 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
 
 =head1 SYNOPSIS
 
@@ -144,6 +144,10 @@ Otherwise, Getopt::Long's GetOptions is called.
 To keep completion quick, you should do C<GetOptions()> or
 C<GetOptionsWithCompletion()> as early as possible in your script. Preferably
 before loading lots of other Perl modules.
+
+Tab completion will behave like Getopt::Long using these configuration: bundling
+(so -abc works), no_ignore_case, auto_abbrev, permute (so you need to give C<-->
+to end completing option names/values). I believe this is a pretty sane default.
 
 =head1 FUNCTIONS
 
