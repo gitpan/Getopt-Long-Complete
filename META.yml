@@ -1,5 +1,5 @@
 ---
-abstract: 'A drop-in replacement for Getopt::Long, with tab completion'
+abstract: 'A drop-in replacement for Getopt::Long, with bash tab completion'
 author:
   - 'Steven Haryanto <stevenharyanto@gmail.com>'
 build_requires:
@@ -25,7 +25,7 @@ resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Getopt-Long-Complete
   homepage: https://metacpan.org/release/Getopt-Long-Complete
   repository: git://github.com/sharyanto/perl-Getopt-Long-Complete.git
-version: '0.10'
+version: '0.11'
 x_Dist_Zilla:
   perl:
     version: '5.018001'

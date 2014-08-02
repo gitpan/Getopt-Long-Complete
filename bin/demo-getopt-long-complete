@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
-our $DATE = '2014-07-27'; # DATE
-our $VERSION = '0.10'; # VERSION
+our $DATE = '2014-08-02'; # DATE
+our $VERSION = '0.11'; # VERSION
 
 use 5.010;
 use strict;
@@ -61,7 +61,7 @@ _
 );
 
 #say $res ? "Getopt failed" : "Getopt succeeded";
-# ABSTRACT: Script to demonstrate Complete::Getopt::Long
+# ABSTRACT: Script to demonstrate Getopt::Long::Complete
 # PODNAME: demo-getopt-long-complete
 
 __END__
@@ -72,11 +72,11 @@ __END__
 
 =head1 NAME
 
-demo-getopt-long-complete - Script to demonstrate Complete::Getopt::Long
+demo-getopt-long-complete - Script to demonstrate Getopt::Long::Complete
 
 =head1 VERSION
 
-This document describes version 0.10 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
+This document describes version 0.11 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2014-08-02.
 
 =head1 SYNOPSIS
 

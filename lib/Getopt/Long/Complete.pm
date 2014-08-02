@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-07-27'; # DATE
-our $VERSION = '0.10'; # VERSION
+our $DATE = '2014-08-02'; # DATE
+our $VERSION = '0.11'; # VERSION
 
 use 5.010001;
 use strict;
@@ -31,7 +31,7 @@ sub GetOptionsWithCompletion {
 
         my ($words, $cword) = @{ Complete::Bash::parse_cmdline(
             undef, undef, '=') };
-        shift @$words; $cword--; # strip command name
+        shift @$words; $cword--; # strip program name
         my $compres = Complete::Getopt::Long::complete_cli_arg(
             words => $words, cword => $cword, getopt_spec=>{ @_ },
             completion => $comp);
@@ -54,7 +54,7 @@ sub GetOptions {
 }
 
 1;
-#ABSTRACT: A drop-in replacement for Getopt::Long, with tab completion
+#ABSTRACT: A drop-in replacement for Getopt::Long, with bash tab completion
 
 __END__
 
@@ -64,11 +64,11 @@ __END__
 
 =head1 NAME
 
-Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with tab completion
+Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with bash tab completion
 
 =head1 VERSION
 
-This document describes version 0.10 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-07-27.
+This document describes version 0.11 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-08-02.
 
 =head1 SYNOPSIS
 
@@ -89,8 +89,8 @@ example, below is source code for C<delete-user>.
  );
 
 To activate completion, put your script somewhere in C<PATH> and execute this in
-the shell or put it into your bash startup file (e.g. C</etc/bash_profile> or
-C<~/.bashrc>):
+the shell or put it into your bash startup file (e.g. C</etc/profile>,
+C</etc/bash.bashrc>, C<~/.bash_profile>, or C<~/.bashrc>):
 
  complete -C delete-user delete-user
 
@@ -105,8 +105,9 @@ Now, tab completion works:
 The previous example only provides completion for option names. To provide
 completion for option values as well as arguments, you need to provide more
 hints. Instead of C<GetOptions>, use C<GetOptionsWithCompletion>. It's basically
-the same as C<GetOptions> but accepts a coderef in the first argument. The code
-will be invoked when completion to option value or argument is needed. Example:
+the same as C<GetOptions> but accepts an extra coderef in the first argument.
+The code will be invoked when completion to option value or argument is needed.
+Example:
 
  use Getopt::Long::Complete qw(GetOptionsWithCompletion);
  use Complete::Unix qw(complete_user);
@@ -133,9 +134,12 @@ will be invoked when completion to option value or argument is needed. Example:
 
 =head1 DESCRIPTION
 
-This module provides a quick and easy way to add tab completion feature to your
-scripts, including scripts already written using the venerable L<Getopt::Long>
-module.
+This module provides a quick and easy way to add shell tab completion feature to
+your scripts, including scripts already written using the venerable
+L<Getopt::Long> module.
+
+Currently only bash is supported, but support for other shells can be added in
+the future.
 
 This module is basically just a thin wrapper for Getopt::Long. Its C<GetOptions>
 function just checks for COMP_LINE/COMP_POINT environment variable before
@@ -154,7 +158,7 @@ Getopt::Long::Configure('no_ignore_case', 'bundling');
 =head2 GetOptions([\%hash, ]@spec)
 
 Will call Getopt::Long's GetOptions, except when COMP_LINE environment variable
-is defined.
+is defined, in which case will print completion reply to STDOUT and exit.
 
 B<Note: Will temporarily set Getopt::Long configuration as follow: bundling,
 no_ignore_case. I believe this a sane default.>

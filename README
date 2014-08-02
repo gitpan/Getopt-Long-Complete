@@ -1,10 +1,10 @@
 NAME
     Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with
-    tab completion
+    bash tab completion
 
 VERSION
-    This document describes version 0.10 of Getopt::Long::Complete (from
-    Perl distribution Getopt-Long-Complete), released on 2014-07-27.
+    This document describes version 0.11 of Getopt::Long::Complete (from
+    Perl distribution Getopt-Long-Complete), released on 2014-08-02.
 
 SYNOPSIS
   First example (simple)
@@ -24,7 +24,7 @@ SYNOPSIS
 
     To activate completion, put your script somewhere in "PATH" and execute
     this in the shell or put it into your bash startup file (e.g.
-    "/etc/bash_profile" or "~/.bashrc"):
+    "/etc/profile", "/etc/bash.bashrc", "~/.bash_profile", or "~/.bashrc"):
 
      complete -C delete-user delete-user
 
@@ -39,8 +39,8 @@ SYNOPSIS
     provide completion for option values as well as arguments, you need to
     provide more hints. Instead of "GetOptions", use
     "GetOptionsWithCompletion". It's basically the same as "GetOptions" but
-    accepts a coderef in the first argument. The code will be invoked when
-    completion to option value or argument is needed. Example:
+    accepts an extra coderef in the first argument. The code will be invoked
+    when completion to option value or argument is needed. Example:
 
      use Getopt::Long::Complete qw(GetOptionsWithCompletion);
      use Complete::Unix qw(complete_user);
@@ -66,9 +66,12 @@ SYNOPSIS
      );
 
 DESCRIPTION
-    This module provides a quick and easy way to add tab completion feature
-    to your scripts, including scripts already written using the venerable
-    Getopt::Long module.
+    This module provides a quick and easy way to add shell tab completion
+    feature to your scripts, including scripts already written using the
+    venerable Getopt::Long module.
+
+    Currently only bash is supported, but support for other shells can be
+    added in the future.
 
     This module is basically just a thin wrapper for Getopt::Long. Its
     "GetOptions" function just checks for COMP_LINE/COMP_POINT environment
@@ -86,7 +89,8 @@ DESCRIPTION
 FUNCTIONS
   GetOptions([\%hash, ]@spec)
     Will call Getopt::Long's GetOptions, except when COMP_LINE environment
-    variable is defined.
+    variable is defined, in which case will print completion reply to STDOUT
+    and exit.
 
     Note: Will temporarily set Getopt::Long configuration as follow:
     bundling, no_ignore_case. I believe this a sane default.
