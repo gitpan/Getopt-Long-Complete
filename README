@@ -3,8 +3,8 @@ NAME
     bash tab completion
 
 VERSION
-    This document describes version 0.11 of Getopt::Long::Complete (from
-    Perl distribution Getopt-Long-Complete), released on 2014-08-02.
+    This document describes version 0.12 of Getopt::Long::Complete (from
+    Perl distribution Getopt-Long-Complete), released on 2014-08-07.
 
 SYNOPSIS
   First example (simple)
