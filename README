@@ -3,8 +3,8 @@ NAME
     bash tab completion
 
 VERSION
-    This document describes version 0.12 of Getopt::Long::Complete (from
-    Perl distribution Getopt-Long-Complete), released on 2014-08-07.
+    This document describes version 0.13 of Getopt::Long::Complete (from
+    Perl distribution Getopt-Long-Complete), released on 2014-11-10.
 
 SYNOPSIS
   First example (simple)
@@ -17,7 +17,7 @@ SYNOPSIS
      GetOptions(
          'help|h'     => sub { ... },
          'on-fail=s'  => \$opts{on_fail},
-         'user=s'     => \$opts{name},
+         'user|U=s'   => \$opts{name},
          'force'      => \$opts{force},
          'verbose!'   => \$opts{verbose},
      );
@@ -27,6 +27,8 @@ SYNOPSIS
     "/etc/profile", "/etc/bash.bashrc", "~/.bash_profile", or "~/.bashrc"):
 
      complete -C delete-user delete-user
+
+    Or you can also use bash-completion-prog.
 
     Now, tab completion works:
 
@@ -50,10 +52,13 @@ SYNOPSIS
          sub {
              my %args  = @_;
              my $word  = $args{word}; # the word to be completed
-             my $ospec = $args{ospec};
-             if ($ospec && $ospec eq 'on-fail=s') {
+             my $type  = $args{type}; # 'optname', 'optval', or 'arg'
+             my $opt   = $args{opt};
+             if ($type eq 'optval' && $opt eq '--on-fail') {
                  return complete_array_elem(words=>[qw/die warn ignore/], word=>$word);
-             } elsif ($ospec eq 'user=s') {
+             } elsif ($type eq 'optval' && ($opt eq '--user' || $opt eq '-U')) {
+                 return complete_user(word=>$word);
+             } elsif ($type eq 'arg') {
                  return complete_user(word=>$word);
              }
              [];
@@ -84,8 +89,6 @@ DESCRIPTION
     "GetOptionsWithCompletion()" as early as possible in your script.
     Preferably before loading lots of other Perl modules.
 
-    Getopt::Long::Configure('no_ignore_case', 'bundling');
-
 FUNCTIONS
   GetOptions([\%hash, ]@spec)
     Will call Getopt::Long's GetOptions, except when COMP_LINE environment
@@ -98,7 +101,10 @@ FUNCTIONS
   GetOptionsWithCompletion(\&completion, [\%hash, ]@spec)
     Just like "GetOptions", except that it accepts an extra first argument
     "\&completion" containing completion routine for completing option
-    *values* and arguments. See Synopsis for example.
+    *values* and arguments. This will be passed as "completion" argument to
+    Complete::Getopt::Long's "complete_cli_arg". See that module's
+    documentation on details of what is passed to the routine and what
+    return value is expected from it.
 
 SEE ALSO
     Complete::Getopt::Long (the backend for this module), "Complete::Bash".
@@ -108,6 +114,8 @@ SEE ALSO
 
     Perinci::CmdLine - an alternative way to easily create command-line
     applications with completion feature.
+
+    App::BashCompletionProg
 
 HOMEPAGE
     Please visit the project's homepage at
@@ -125,10 +133,10 @@ BUGS
     to an existing test-file that illustrates the bug or desired feature.
 
 AUTHOR
-    Steven Haryanto <stevenharyanto@gmail.com>
+    perlancar <perlancar@cpan.org>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2014 by Steven Haryanto.
+    This software is copyright (c) 2014 by perlancar@cpan.org.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

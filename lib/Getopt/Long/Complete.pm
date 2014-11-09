@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-08-07'; # DATE
-our $VERSION = '0.12'; # VERSION
+our $DATE = '2014-11-10'; # DATE
+our $VERSION = '0.13'; # VERSION
 
 use 5.010001;
 use strict;
@@ -68,7 +68,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with bash tab c
 
 =head1 VERSION
 
-This document describes version 0.12 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-08-07.
+This document describes version 0.13 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-11-10.
 
 =head1 SYNOPSIS
 
@@ -83,7 +83,7 @@ example, below is source code for C<delete-user>.
  GetOptions(
      'help|h'     => sub { ... },
      'on-fail=s'  => \$opts{on_fail},
-     'user=s'     => \$opts{name},
+     'user|U=s'   => \$opts{name},
      'force'      => \$opts{force},
      'verbose!'   => \$opts{verbose},
  );
@@ -93,6 +93,8 @@ the shell or put it into your bash startup file (e.g. C</etc/profile>,
 C</etc/bash.bashrc>, C<~/.bash_profile>, or C<~/.bashrc>):
 
  complete -C delete-user delete-user
+
+Or you can also use L<bash-completion-prog>.
 
 Now, tab completion works:
 
@@ -117,10 +119,13 @@ Example:
      sub {
          my %args  = @_;
          my $word  = $args{word}; # the word to be completed
-         my $ospec = $args{ospec};
-         if ($ospec && $ospec eq 'on-fail=s') {
+         my $type  = $args{type}; # 'optname', 'optval', or 'arg'
+         my $opt   = $args{opt};
+         if ($type eq 'optval' && $opt eq '--on-fail') {
              return complete_array_elem(words=>[qw/die warn ignore/], word=>$word);
-         } elsif ($ospec eq 'user=s') {
+         } elsif ($type eq 'optval' && ($opt eq '--user' || $opt eq '-U')) {
+             return complete_user(word=>$word);
+         } elsif ($type eq 'arg') {
              return complete_user(word=>$word);
          }
          [];
@@ -151,8 +156,6 @@ To keep completion quick, you should do C<GetOptions()> or
 C<GetOptionsWithCompletion()> as early as possible in your script. Preferably
 before loading lots of other Perl modules.
 
-Getopt::Long::Configure('no_ignore_case', 'bundling');
-
 =head1 FUNCTIONS
 
 =head2 GetOptions([\%hash, ]@spec)
@@ -167,7 +170,10 @@ no_ignore_case. I believe this a sane default.>
 
 Just like C<GetOptions>, except that it accepts an extra first argument
 C<\&completion> containing completion routine for completing option I<values>
-and arguments. See Synopsis for example.
+and arguments. This will be passed as C<completion> argument to
+L<Complete::Getopt::Long>'s C<complete_cli_arg>. See that module's documentation
+on details of what is passed to the routine and what return value is expected
+from it.
 
 =head1 SEE ALSO
 
@@ -178,6 +184,8 @@ L<Getopt::Complete>.
 
 L<Perinci::CmdLine> - an alternative way to easily create command-line
 applications with completion feature.
+
+L<App::BashCompletionProg>
 
 =head1 HOMEPAGE
 
@@ -197,11 +205,11 @@ feature.
 
 =head1 AUTHOR
 
-Steven Haryanto <stevenharyanto@gmail.com>
+perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Steven Haryanto.
+This software is copyright (c) 2014 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
