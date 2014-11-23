@@ -1,10 +1,10 @@
 NAME
     Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with
-    bash tab completion
+    shell tab completion
 
 VERSION
-    This document describes version 0.13 of Getopt::Long::Complete (from
-    Perl distribution Getopt-Long-Complete), released on 2014-11-10.
+    This document describes version 0.14 of Getopt::Long::Complete (from
+    Perl distribution Getopt-Long-Complete), released on 2014-11-23.
 
 SYNOPSIS
   First example (simple)
@@ -22,15 +22,8 @@ SYNOPSIS
          'verbose!'   => \$opts{verbose},
      );
 
-    To activate completion, put your script somewhere in "PATH" and execute
-    this in the shell or put it into your bash startup file (e.g.
-    "/etc/profile", "/etc/bash.bashrc", "~/.bash_profile", or "~/.bashrc"):
-
-     complete -C delete-user delete-user
-
-    Or you can also use bash-completion-prog.
-
-    Now, tab completion works:
+    Several shells are supported. to activate completion, see "DESCRIPTION".
+    After activation, tab completion works:
 
      % delete-user <tab>
      --force --help --noverbose --no-verbose --on-fail --user --verbose -h
@@ -75,19 +68,34 @@ DESCRIPTION
     feature to your scripts, including scripts already written using the
     venerable Getopt::Long module.
 
-    Currently only bash is supported, but support for other shells can be
-    added in the future.
+    Currently bash and tcsh is supported, support for other shells like fish
+    and zsh are planned for the future.
 
     This module is basically just a thin wrapper for Getopt::Long. Its
     "GetOptions" function just checks for COMP_LINE/COMP_POINT environment
-    variable before passing its arguments to Getopt::Long's GetOptions. If
-    COMP_LINE is defined, completion reply will be printed to STDOUT and
-    then the program will exit. Otherwise, Getopt::Long's GetOptions is
-    called.
+    variable (in the case of bash) or COMMAND_LINE (tcsh) before passing its
+    arguments to Getopt::Long's GetOptions. If those environment variable(s)
+    are defined, completion reply will be printed to STDOUT and then the
+    program will exit. Otherwise, Getopt::Long's GetOptions is called.
 
     To keep completion quick, you should do "GetOptions()" or
     "GetOptionsWithCompletion()" as early as possible in your script.
     Preferably before loading lots of other Perl modules.
+
+    To activate tab completion in bash, put your script somewhere in "PATH"
+    and execute this in the shell or put it into your bash startup file
+    (e.g. "/etc/profile", "/etc/bash.bashrc", "~/.bash_profile", or
+    "~/.bashrc"):
+
+     complete -C delete-user delete-user
+
+    Or you can also use bash-completion-prog.
+
+    To activate tab completion in tcsh, put your script somewhere in "PATH"
+    and execute this in the shell or put it into your bash startup file
+    (e.g. "/etc/csh.cshrc" or "~/.tcshrc"):
+
+     complete delete-user 'p/*/`delete-user`/'
 
 FUNCTIONS
   GetOptions([\%hash, ]@spec)
@@ -107,7 +115,8 @@ FUNCTIONS
     return value is expected from it.
 
 SEE ALSO
-    Complete::Getopt::Long (the backend for this module), "Complete::Bash".
+    Complete::Getopt::Long (the backend for this module), "Complete::Bash",
+    "Complete::Tcsh".
 
     Other option-processing modules featuring shell tab completion:
     Getopt::Complete.
