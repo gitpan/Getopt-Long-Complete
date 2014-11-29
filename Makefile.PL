@@ -22,10 +22,13 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Getopt::Long::Complete",
   "PREREQ_PM" => {
-    "Complete::Bash" => "0.09",
-    "Complete::Getopt::Long" => "0.09",
+    "Complete::Bash" => "0.12",
+    "Complete::Fish" => "0.03",
+    "Complete::Fish::Gen::FromGetoptLong" => 0,
+    "Complete::Getopt::Long" => "0.17",
     "Complete::Tcsh" => 0,
-    "Complete::Util" => 0
+    "Complete::Util" => 0,
+    "Complete::Zsh" => 0
   },
   "TEST_REQUIRES" => {
     "File::Spec" => 0,
@@ -33,7 +36,7 @@ my %WriteMakefileArgs = (
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.14",
+  "VERSION" => "0.15",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -41,10 +44,13 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Complete::Bash" => "0.09",
-  "Complete::Getopt::Long" => "0.09",
+  "Complete::Bash" => "0.12",
+  "Complete::Fish" => "0.03",
+  "Complete::Fish::Gen::FromGetoptLong" => 0,
+  "Complete::Getopt::Long" => "0.17",
   "Complete::Tcsh" => 0,
   "Complete::Util" => 0,
+  "Complete::Zsh" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,

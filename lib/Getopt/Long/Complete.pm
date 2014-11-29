@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-11-23'; # DATE
-our $VERSION = '0.14'; # VERSION
+our $DATE = '2014-11-29'; # DATE
+our $VERSION = '0.15'; # VERSION
 
 use 5.010001;
 use strict;
@@ -25,14 +25,35 @@ sub GetOptionsWithCompletion {
         $hash = shift;
     }
 
-    if ($ENV{COMP_LINE} || $ENV{COMMAND_LINE}) {
+    my $shell = $ENV{COMP_SHELL} // 'bash';
+    if ($ENV{COMP_MODE} && $ENV{COMP_MODE} eq 'gen_command') {
+        if ($shell eq 'fish') {
+            require Complete::Fish::Gen::FromGetoptLong;
+            my $res = Complete::Fish::Gen::FromGetoptLong::gen_fish_complete_from_getopt_long_spec(
+                spec => {@_});
+            die "Can't generate completion command for fish: $res->[0] - $res->[1]\n"
+                unless $res->[0] == 200;
+            print $res->[2];
+            exit 0;
+        } else {
+            die "Sorry, COMP_MODE=gen_command is currently supported on fish only\n";
+        }
+    } elsif ($ENV{COMP_LINE} || $ENV{COMMAND_LINE}) {
         my ($words, $cword);
         if ($ENV{COMP_LINE}) {
-            require Complete::Bash;
-            ($words, $cword) = @{ Complete::Bash::parse_cmdline(
-                undef, undef, '=') };
+            if ($shell eq 'bash') {
+                require Complete::Bash;
+                ($words,$cword) = @{Complete::Bash::parse_cmdline(undef,undef,'=')};
+            } elsif ($shell eq 'fish') {
+                require Complete::Fish;
+                ($words,$cword) = @{Complete::Fish::parse_cmdline(undef)};
+            } elsif ($shell eq 'zsh') {
+                require Complete::Zsh;
+                ($words,$cword) = @{Complete::Zsh::parse_cmdline(undef)};
+            }
         } elsif ($ENV{COMMAND_LINE}) {
             require Complete::Tcsh;
+            $shell = 'tcsh';
             ($words, $cword) = @{ Complete::Tcsh::parse_cmdline() };
         }
 
@@ -43,10 +64,14 @@ sub GetOptionsWithCompletion {
             words => $words, cword => $cword, getopt_spec=>{ @_ },
             completion => $comp);
 
-        if ($ENV{COMP_LINE}) {
+        if ($shell eq 'bash') {
             print Complete::Bash::format_completion($compres);
-        } elsif ($ENV{COMMAND_LINE}) {
+        } elsif ($shell eq 'fish') {
+            print Complete::Fish::format_completion($compres);
+        } elsif ($shell eq 'tcsh') {
             print Complete::Tcsh::format_completion($compres);
+        } elsif ($shell eq 'zsh') {
+            print Complete::Zsh::format_completion($compres);
         }
 
         exit 0;
@@ -81,7 +106,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.14 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-11-23.
+This document describes version 0.15 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-11-29.
 
 =head1 SYNOPSIS
 
@@ -101,7 +126,7 @@ example, below is source code for C<delete-user>.
      'verbose!'   => \$opts{verbose},
  );
 
-Several shells are supported. to activate completion, see L</"DESCRIPTION">.
+Several shells are supported. To activate completion, see L</"DESCRIPTION">.
 After activation, tab completion works:
 
  % delete-user <tab>
@@ -149,15 +174,14 @@ This module provides a quick and easy way to add shell tab completion feature to
 your scripts, including scripts already written using the venerable
 L<Getopt::Long> module.
 
-Currently bash and tcsh is supported, support for other shells like fish and zsh
-are planned for the future.
+Currently bash, fish, tcsh and zsh are supported.
 
 This module is basically just a thin wrapper for Getopt::Long. Its C<GetOptions>
 function just checks for COMP_LINE/COMP_POINT environment variable (in the case
-of bash) or COMMAND_LINE (tcsh) before passing its arguments to Getopt::Long's
-GetOptions. If those environment variable(s) are defined, completion reply will
-be printed to STDOUT and then the program will exit. Otherwise, Getopt::Long's
-GetOptions is called.
+of bash/fish/zsh) or COMMAND_LINE (tcsh) before passing its arguments to
+Getopt::Long's GetOptions. If those environment variable(s) are defined,
+completion reply will be printed to STDOUT and then the program will exit.
+Otherwise, Getopt::Long's GetOptions is called.
 
 To keep completion quick, you should do C<GetOptions()> or
 C<GetOptionsWithCompletion()> as early as possible in your script. Preferably
@@ -165,17 +189,34 @@ before loading lots of other Perl modules.
 
 B<To activate tab completion in bash>, put your script somewhere in C<PATH> and
 execute this in the shell or put it into your bash startup file (e.g.
-C</etc/profile>, C</etc/bash.bashrc>, C<~/.bash_profile>, or C<~/.bashrc>):
+C</etc/profile>, C</etc/bash.bashrc>, C<~/.bash_profile>, or C<~/.bashrc>).
+Replace C<delete-user> with the actual script name:
 
  complete -C delete-user delete-user
 
 Or you can also use L<bash-completion-prog>.
+
+B<To activate tab completion in fish>, put your script somewhere in C<PATH> and
+run this:
+
+ begin; set -lx COMP_SHELL fish; set -lx COMP_MODE gen_command; delete-user; end > $HOME/.config/fish/completions/delete-user.fish
+
+Or use C</etc/fish/completions/delete-user.fish> if you want to install
+globally.
 
 B<To activate tab completion in tcsh>, put your script somewhere in C<PATH> and
 execute this in the shell or put it into your bash startup file (e.g.
 C</etc/csh.cshrc> or C<~/.tcshrc>):
 
  complete delete-user 'p/*/`delete-user`/'
+
+B<To activate tab completion in zsh>, put your script somewhere in C<PATH> and
+execute this in the shell or put it into your bash startup file (e.g.
+C</etc/zsh/zshrc> or C<~/.zshrc>):
+
+ _delete_user() { read -l; local cl="$REPLY"; read -ln; local cp="$REPLY"; reply=(`COMP_LINE="$cl" COMP_POINT="$cp" delete-user`) }
+
+ compctl -K _delete_user delete-user
 
 =head1 FUNCTIONS
 
