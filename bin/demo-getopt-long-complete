@@ -1,7 +1,7 @@
 #!perl
 
-our $DATE = '2014-12-13'; # DATE
-our $VERSION = '0.16'; # VERSION
+our $DATE = '2014-12-14'; # DATE
+our $VERSION = '0.17'; # VERSION
 
 use 5.010;
 use strict;
@@ -76,7 +76,7 @@ demo-getopt-long-complete - Script to demonstrate Getopt::Long::Complete
 
 =head1 VERSION
 
-This document describes version 0.16 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-13.
+This document describes version 0.17 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-14.
 
 =head1 SYNOPSIS
 
@@ -105,15 +105,7 @@ To activate bash completion for this script, put:
 
 in your bash startup (e.g. C<~/.bashrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
 
-You can also install L<App::BashCompletionProg> which makes it easy to add completion for Getopt::Long::Complete-based scripts. After you install the module and put C<. ~/.bash-complete-prog> (or C<. /etc/bash-complete-prog>), you can just run C<bash-completion-prog> and the C<complete> command will be added to your C<~/.bash-completion-prog>. Your next shell session will then recognize tab completion for the command.
-
-=head2 fish
-
-To activate fish completion for this script, execute:
-
- begin; set -lx COMP_SHELL fish; set -lx COMP_MODE gen_command; demo-getopt-long-complete; end > $HOME/.config/fish/completions/demo-getopt-long-complete.fish
-
-Or if you want to install globally, you can instead write the generated script to C</etc/fish/completions/demo-getopt-long-complete.fish> or C</usr/share/fish/completions/demo-getopt-long-complete.fish>. The exact path might be different on your system. Please check your C<fish_complete_path> variable.
+It is recommended, however, that you install L<shcompgen> which allows you to activate completion scripts for several kinds of scripts on multiple shells. Some CPAN distributions (those that are built with L<Dist::Zilla::Plugin::GenShellCompletion>) will even automatically enable shell completion for their included scripts (using C<shcompgen>) at installation time, so you can immadiately have tab completion.
 
 =head2 tcsh
 
@@ -123,15 +115,11 @@ To activate tcsh completion for this script, put:
 
 in your tcsh startup (e.g. C<~/.tcshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
 
-=head2 zsh
+It is also recommended to install C<shcompgen> (see above).
 
-To activate zsh completion for this script, put:
+=head2 other shells
 
- _demo_getopt_long_complete() { read -l; local cl="$REPLY"; read -ln; local cp="$REPLY"; reply=(`COMP_SHELL=zsh COMP_LINE="$cl" COMP_POINT="$cp" demo-getopt-long-complete`) }
-
- compctl -K _demo_getopt_long_complete demo-getopt-long-complete
-
-in your zsh startup (e.g. C<~/.zshrc>). Your next shell session will then recognize tab completion for the command. Or, you can also directly execute the line above in your shell to activate immediately.
+For fish and zsh, install C<shcompgen> as described above.
 
 =head1 HOMEPAGE
 

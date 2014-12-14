@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-12-13'; # DATE
-our $VERSION = '0.16'; # VERSION
+our $DATE = '2014-12-14'; # DATE
+our $VERSION = '0.17'; # VERSION
 
 use 5.010001;
 use strict;
@@ -25,32 +25,20 @@ sub GetOptionsWithCompletion {
         $hash = shift;
     }
 
-    my $shell = $ENV{COMP_SHELL} // 'bash';
-    if ($ENV{COMP_MODE} && $ENV{COMP_MODE} eq 'gen_command') {
-        if ($shell eq 'fish') {
-            require Complete::Fish::Gen::FromGetoptLong;
-            my $res = Complete::Fish::Gen::FromGetoptLong::gen_fish_complete_from_getopt_long_spec(
-                spec => {@_});
-            die "Can't generate completion command for fish: $res->[0] - $res->[1]\n"
-                unless $res->[0] == 200;
-            print $res->[2];
-            exit 0;
-        } else {
-            die "Sorry, COMP_MODE=gen_command is currently supported on fish only\n";
-        }
-    } elsif ($ENV{COMP_LINE} || $ENV{COMMAND_LINE}) {
+    my $shell;
+    if ($ENV{COMP_SHELL}) {
+        ($shell = $ENV{COMP_SHELL}) =~ s!.+/!!;
+    } elsif ($ENV{COMMAND_LINE}) {
+        $shell = 'tcsh';
+    } else {
+        $shell = 'bash';
+    }
+
+    if ($ENV{COMP_LINE} || $ENV{COMMAND_LINE}) {
         my ($words, $cword);
         if ($ENV{COMP_LINE}) {
-            if ($shell eq 'bash') {
-                require Complete::Bash;
-                ($words,$cword) = @{Complete::Bash::parse_cmdline(undef,undef,'=')};
-            } elsif ($shell eq 'fish') {
-                require Complete::Fish;
-                ($words,$cword) = @{Complete::Fish::parse_cmdline(undef)};
-            } elsif ($shell eq 'zsh') {
-                require Complete::Zsh;
-                ($words,$cword) = @{Complete::Zsh::parse_cmdline(undef)};
-            }
+            require Complete::Bash;
+            ($words,$cword) = @{Complete::Bash::parse_cmdline(undef,undef,'=')};
         } elsif ($ENV{COMMAND_LINE}) {
             require Complete::Tcsh;
             $shell = 'tcsh';
@@ -66,12 +54,10 @@ sub GetOptionsWithCompletion {
 
         if ($shell eq 'bash') {
             print Complete::Bash::format_completion($compres);
-        } elsif ($shell eq 'fish') {
-            print Complete::Fish::format_completion($compres);
         } elsif ($shell eq 'tcsh') {
             print Complete::Tcsh::format_completion($compres);
-        } elsif ($shell eq 'zsh') {
-            print Complete::Zsh::format_completion($compres);
+        } else {
+            die "Unknown shell '$shell'";
         }
 
         exit 0;
@@ -92,7 +78,7 @@ sub GetOptions {
 }
 
 1;
-#ABSTRACT: A drop-in replacement for Getopt::Long, with shell tab completion
+# ABSTRACT: A drop-in replacement for Getopt::Long, with shell tab completion
 
 __END__
 
@@ -106,7 +92,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.16 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-13.
+This document describes version 0.17 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-14.
 
 =head1 SYNOPSIS
 
