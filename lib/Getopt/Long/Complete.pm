@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-12-14'; # DATE
-our $VERSION = '0.17'; # VERSION
+our $DATE = '2014-12-18'; # DATE
+our $VERSION = '0.18'; # VERSION
 
 use 5.010001;
 use strict;
@@ -92,7 +92,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.17 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-14.
+This document describes version 0.18 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-18.
 
 =head1 SYNOPSIS
 
@@ -225,7 +225,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Getopt-Lon
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/sharyanto/perl-Getopt-Long-Complete>.
+Source repository is at L<https://github.com/perlancar/perl-Getopt-Long-Complete>.
 
 =head1 BUGS
 
