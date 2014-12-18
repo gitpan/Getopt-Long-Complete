@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
 our $DATE = '2014-12-18'; # DATE
-our $VERSION = '0.18'; # VERSION
+our $VERSION = '0.19'; # VERSION
 
 use 5.010001;
 use strict;
@@ -92,7 +92,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.18 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-18.
+This document describes version 0.19 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-18.
 
 =head1 SYNOPSIS
 

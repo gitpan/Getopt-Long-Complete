@@ -22,14 +22,19 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "MIN_PERL_VERSION" => "5.010001",
   "NAME" => "Getopt::Long::Complete",
-  "PREREQ_PM" => {},
+  "PREREQ_PM" => {
+    "Complete::Bash" => "0.12",
+    "Complete::Getopt::Long" => "0.17",
+    "Complete::Tcsh" => 0,
+    "Complete::Util" => 0
+  },
   "TEST_REQUIRES" => {
     "File::Spec" => 0,
     "IO::Handle" => 0,
     "IPC::Open3" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.18",
+  "VERSION" => "0.19",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -37,6 +42,10 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Complete::Bash" => "0.12",
+  "Complete::Getopt::Long" => "0.17",
+  "Complete::Tcsh" => 0,
+  "Complete::Util" => 0,
   "ExtUtils::MakeMaker" => 0,
   "File::Spec" => 0,
   "IO::Handle" => 0,
@@ -53,13 +62,6 @@ unless ( eval { ExtUtils::MakeMaker->VERSION(6.63_03) } ) {
 
 delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
   unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
-
-if ( $^O =~ /^(aix|cygwin|darwin|dragonfly|freebsd|gnukfreebsd|hpux|interix|irix|linux|midnightbsd|minix|mirbsd|netbsd|openbsd|sco|solaris)$/i ) {
-	$WriteMakefileArgs{PREREQ_PM}{'Complete::Bash'} = '0.12';
-	$WriteMakefileArgs{PREREQ_PM}{'Complete::Getopt::Long'} = '0.17';
-	$WriteMakefileArgs{PREREQ_PM}{'Complete::Tcsh'} = '0';
-	$WriteMakefileArgs{PREREQ_PM}{'Complete::Util'} = '0';
-}
 
 WriteMakefile(%WriteMakefileArgs);
 

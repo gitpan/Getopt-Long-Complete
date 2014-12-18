@@ -9,7 +9,7 @@ build_requires:
   Test::More: '0'
 configure_requires:
   ExtUtils::MakeMaker: '0'
-dynamic_config: 1
+dynamic_config: 0
 generated_by: 'Dist::Zilla version 5.025, CPAN::Meta::Converter version 2.143240'
 license: perl
 meta-spec:
@@ -17,12 +17,16 @@ meta-spec:
   version: '1.4'
 name: Getopt-Long-Complete
 requires:
+  Complete::Bash: '0.12'
+  Complete::Getopt::Long: '0.17'
+  Complete::Tcsh: '0'
+  Complete::Util: '0'
   perl: '5.010001'
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=Getopt-Long-Complete
   homepage: https://metacpan.org/release/Getopt-Long-Complete
   repository: git://github.com/perlancar/perl-Getopt-Long-Complete.git
-version: '0.18'
+version: '0.19'
 x_Dist_Zilla:
   perl:
     version: '5.018002'
@@ -290,13 +294,6 @@ x_Dist_Zilla:
           type: requires
       name: Prereqs
       version: '5.025'
-    -
-      class: Dist::Zilla::Plugin::OSPrereqs::Unix
-      config:
-        Dist::Zilla::Plugin::OSPrereqs:
-          os: '~^(aix|cygwin|darwin|dragonfly|freebsd|gnukfreebsd|hpux|interix|irix|linux|midnightbsd|minix|mirbsd|netbsd|openbsd|sco|solaris)$'
-      name: OSPrereqs::Unix
-      version: '0.01'
     -
       class: Dist::Zilla::Plugin::FinderCode
       name: ':InstallModules'
