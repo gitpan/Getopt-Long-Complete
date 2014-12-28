@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-12-18'; # DATE
-our $VERSION = '0.19'; # VERSION
+our $DATE = '2014-12-29'; # DATE
+our $VERSION = '0.20'; # VERSION
 
 use 5.010001;
 use strict;
@@ -16,6 +16,10 @@ our @EXPORT_OK = qw(
                     GetOptions
                     GetOptionsWithCompletion
                );
+
+# default follows Getopt::Long
+our $opt_permute = $ENV{POSIXLY_CORRECT} ? 0 : 1;
+our $opt_pass_through = 0;
 
 sub GetOptionsWithCompletion {
     my $comp = shift;
@@ -64,7 +68,12 @@ sub GetOptionsWithCompletion {
     }
 
     require Getopt::Long;
-    my $old_conf = Getopt::Long::Configure('no_ignore_case', 'bundling');
+    my $old_conf = Getopt::Long::Configure(
+        'no_ignore_case',
+        'bundling',
+        $opt_permute ? 'permute' : 'no_permute',
+        $opt_pass_through ? 'pass_through' : 'no_pass_through',
+    );
     if ($hash) {
         Getopt::Long::GetOptions($hash, @_);
     } else {
@@ -92,7 +101,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.19 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2014-12-18.
+This document describes version 0.20 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2015-12-29.
 
 =head1 SYNOPSIS
 
@@ -204,6 +213,16 @@ L<Complete::Getopt::Long>'s C<complete_cli_arg>. See that module's documentation
 on details of what is passed to the routine and what return value is expected
 from it.
 
+=head1 VARIABLES
+
+Because we are "bound" by providing a Getopt::Long-compatible function
+interface, these variables exist to allow configuring Getopt::Long::GetOptions.
+You can use Perl's C<local> to localize the effect.
+
+=head2 $opt_permute => bool (default: 1 or 0 if POSIXLY_CORRECT)
+
+=head2 $opt_pass_through => bool (default: 0)
+
 =head1 SEE ALSO
 
 L<Complete::Getopt::Long> (the backend for this module), C<Complete::Bash>,
@@ -225,7 +244,7 @@ Please visit the project's homepage at L<https://metacpan.org/release/Getopt-Lon
 
 =head1 SOURCE
 
-Source repository is at L<https://github.com/perlancar/perl-Getopt-Long-Complete>.
+Source repository is at L<https://github.com/sharyanto/perl-Getopt-Long-Complete>.
 
 =head1 BUGS
 

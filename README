@@ -3,8 +3,8 @@ NAME
     shell tab completion
 
 VERSION
-    This document describes version 0.19 of Getopt::Long::Complete (from
-    Perl distribution Getopt-Long-Complete), released on 2014-12-18.
+    This document describes version 0.20 of Getopt::Long::Complete (from
+    Perl distribution Getopt-Long-Complete), released on 2015-12-29.
 
 SYNOPSIS
   First example (simple)
@@ -111,6 +111,14 @@ FUNCTIONS
     documentation on details of what is passed to the routine and what
     return value is expected from it.
 
+VARIABLES
+    Because we are "bound" by providing a Getopt::Long-compatible function
+    interface, these variables exist to allow configuring
+    Getopt::Long::GetOptions. You can use Perl's "local" to localize the
+    effect.
+
+  $opt_permute => bool (default: 1 or 0 if POSIXLY_CORRECT)
+  $opt_pass_through => bool (default: 0)
 SEE ALSO
     Complete::Getopt::Long (the backend for this module), "Complete::Bash",
     "Complete::Tcsh".
@@ -131,7 +139,7 @@ HOMEPAGE
 
 SOURCE
     Source repository is at
-    <https://github.com/perlancar/perl-Getopt-Long-Complete>.
+    <https://github.com/sharyanto/perl-Getopt-Long-Complete>.
 
 BUGS
     Please report any bugs or feature requests on the bugtracker website
