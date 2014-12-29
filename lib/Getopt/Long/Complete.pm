@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
 our $DATE = '2014-12-29'; # DATE
-our $VERSION = '0.20'; # VERSION
+our $VERSION = '0.21'; # VERSION
 
 use 5.010001;
 use strict;
@@ -57,7 +57,8 @@ sub GetOptionsWithCompletion {
             completion => $comp);
 
         if ($shell eq 'bash') {
-            print Complete::Bash::format_completion($compres);
+            print Complete::Bash::format_completion(
+                $compres, {word=>$words->[$cword]});
         } elsif ($shell eq 'tcsh') {
             print Complete::Tcsh::format_completion($compres);
         } else {
@@ -101,7 +102,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.20 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2015-12-29.
+This document describes version 0.21 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2015-12-29.
 
 =head1 SYNOPSIS
 
