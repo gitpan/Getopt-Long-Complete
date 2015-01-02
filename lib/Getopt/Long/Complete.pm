@@ -1,7 +1,7 @@
 package Getopt::Long::Complete;
 
-our $DATE = '2014-12-29'; # DATE
-our $VERSION = '0.21'; # VERSION
+our $DATE = '2015-01-02'; # DATE
+our $VERSION = '0.22'; # VERSION
 
 use 5.010001;
 use strict;
@@ -25,8 +25,12 @@ sub GetOptionsWithCompletion {
     my $comp = shift;
 
     my $hash;
+    my $ospec;
     if (ref($_[0]) eq 'HASH') {
         $hash = shift;
+        $ospec = { map {$_=>sub{}} @_ };
+    } else {
+        $ospec = [@_];
     }
 
     my $shell;
@@ -53,7 +57,7 @@ sub GetOptionsWithCompletion {
 
         shift @$words; $cword--; # strip program name
         my $compres = Complete::Getopt::Long::complete_cli_arg(
-            words => $words, cword => $cword, getopt_spec=>{ @_ },
+            words => $words, cword => $cword, getopt_spec => $ospec,
             completion => $comp);
 
         if ($shell eq 'bash') {
@@ -102,7 +106,7 @@ Getopt::Long::Complete - A drop-in replacement for Getopt::Long, with shell tab 
 
 =head1 VERSION
 
-This document describes version 0.21 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2015-12-29.
+This document describes version 0.22 of Getopt::Long::Complete (from Perl distribution Getopt-Long-Complete), released on 2015-01-02.
 
 =head1 SYNOPSIS
 
@@ -261,7 +265,7 @@ perlancar <perlancar@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by perlancar@cpan.org.
+This software is copyright (c) 2015 by perlancar@cpan.org.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
