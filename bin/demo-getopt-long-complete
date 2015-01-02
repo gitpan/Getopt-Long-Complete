@@ -1,7 +1,7 @@
 #!perl
 
 our $DATE = '2015-01-02'; # DATE
-our $VERSION = '0.22'; # VERSION
+our $VERSION = '0.23'; # VERSION
 
 use 5.010;
 use strict;
@@ -98,7 +98,7 @@ demo-getopt-long-complete - Script to demonstrate Getopt::Long::Complete
 
 =head1 VERSION
 
-This document describes version 0.22 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2015-01-02.
+This document describes version 0.23 of demo-getopt-long-complete (from Perl distribution Getopt-Long-Complete), released on 2015-01-02.
 
 =head1 SYNOPSIS
 

@@ -58,7 +58,7 @@
          "web" : "https://github.com/sharyanto/perl-Getopt-Long-Complete"
       }
    },
-   "version" : "0.22",
+   "version" : "0.23",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.018001"
